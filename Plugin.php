@@ -42,8 +42,10 @@ class Plugin extends PluginBase
         });
 
         Event::listen('xeor.octocart.afterOrderSave', function ($order) {
-            $tinkoff = new Tinkoff($order);
-            return Redirect::to($tinkoff->getPaymentUrl());
+            if ($order->payment_method && $order->payment_method->code === 'tinkoff') {
+                $tinkoff = new Tinkoff($order);
+                return Redirect::to($tinkoff->getPaymentUrl());
+            }
         });
 
     }
